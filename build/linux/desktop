@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=My Product
+Comment=A primevue-ts-templateV3 application
+# The Exec line includes %u to pass the URL to the application
+Exec=/usr/local/bin/primevue-ts-templatev3.exe %u
+Terminal=false
+Type=Application
+Icon=primevue-ts-templatev3.exe
+Categories=Utility;
+StartupWMClass=primevue-ts-templatev3.exe
+
+ 
