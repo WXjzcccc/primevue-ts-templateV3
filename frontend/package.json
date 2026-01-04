@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@primeuix/themes": "^2.0.2",
-    "@wailsio/runtime": "^3.0.0-alpha.77",
+    "@wailsio/runtime": "^3.0.0-alpha.78",
     "chart.js": "^4.5.1",
     "pinia": "^3.0.4",
     "primeicons": "^7.0.0",

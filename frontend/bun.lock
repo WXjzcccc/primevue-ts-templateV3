@@ -6,7 +6,7 @@
       "name": "frontend",
       "dependencies": {
         "@primeuix/themes": "^2.0.2",
-        "@wailsio/runtime": "^3.0.0-alpha.77",
+        "@wailsio/runtime": "^3.0.0-alpha.78",
         "chart.js": "^4.5.1",
         "pinia": "^3.0.4",
         "primeicons": "^7.0.0",
@@ -195,7 +195,7 @@
 
     "@vue/shared": ["@vue/shared@3.5.26", "", {}, "sha512-7Z6/y3uFI5PRoKeorTOSXKcDj0MSasfNNltcslbFrPpcw6aXRUALq4IfJlaTRspiWIUOEZbrpM+iQGmCOiWe4A=="],
 
-    "@wailsio/runtime": ["@wailsio/runtime@3.0.0-alpha.77", "", {}, "sha512-DMWjT8VFCk8O818mnw2dbrgZilOf1TzmGGp5lemZyGej7g+SSqAhMFOHp9eCiGQ32EbxmGOdTO4aNZVA00j9Nw=="],
+    "@wailsio/runtime": ["@wailsio/runtime@3.0.0-alpha.78", "", {}, "sha512-OwupMaPV20+9rMJdPTSqlmmu3BaMUEZOdngFK2cAjW228ecO5mg5vq1VPx9op1dftbpKJCKqsVhOpxa0EEQnRA=="],
 
     "acorn": ["acorn@8.15.0", "", { "bin": { "acorn": "bin/acorn" } }, "sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg=="],
 

@@ -38,6 +38,7 @@ onUnmounted(() => {
         </div>
         <!-- <AppFooter /> -->
     </div>
+    <Toast position="bottom-right" />
 </template>
 
 <style>

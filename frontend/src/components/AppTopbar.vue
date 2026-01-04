@@ -40,7 +40,7 @@ const closeWindow = () => {
                 <Button type="button" class="topbar-theme-button" @click="toggleDarkMode" text rounded>
                     <i :class="['pi ', 'pi ', { 'pi-moon': isDarkMode, 'pi-sun': !isDarkMode }]" />
                 </Button>
-                <div class="relative">
+                <div>
                     <Button v-styleclass="{
                         selector: '@next',
                         enterFromClass: 'hidden',
@@ -48,7 +48,7 @@ const closeWindow = () => {
                         leaveToClass: 'hidden',
                         leaveActiveClass: 'animate-fadeout',
                         hideOnOutsideClick: true,
-                    }" icon="pi pi-palette" text rounded aria-label="Settings" />
+                    }" class="topbar-theme-button" icon="pi pi-palette" text rounded aria-label="Settings" />
                     <AppConfig />
 
                 </div>
@@ -68,8 +68,8 @@ const closeWindow = () => {
 
 <style scoped>
 .topbar-logo {
-    height: 2rem;
-    margin-right: 0.75rem;
+    height: 1.8rem;
+    margin-left: 0.5rem;
     user-select: none;
     -webkit-user-drag: none;
     -khtml-user-drag: none;

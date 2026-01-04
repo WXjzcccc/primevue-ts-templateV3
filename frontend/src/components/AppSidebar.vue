@@ -4,7 +4,7 @@
             <template #start>
                 <div class="sidebar-header">
                     <Button @click="toggleSidebar" class="toggle-button"
-                        :icon="isCollapsed ? 'pi pi-bars' : 'pi pi-bars'" text />
+                        :icon="isCollapsed ? 'pi pi-angle-double-right' : 'pi pi-angle-double-left'" text />
                 </div>
             </template>
 
@@ -12,13 +12,13 @@
                 <a v-ripple class="menu-link" v-bind="props.action" @click="navigateTo(item.route)"
                     :class="{ 'active': $route.name === item.name }">
                     <span :class="item.icon" />
-                    <span v-if="!isCollapsed">{{ item.label }}</span>
+                    <span v-if="!isCollapsed" class="menu-text">{{ item.label }}</span>
                 </a>
             </template>
 
             <template #end>
                 <div class="sidebar-footer" style="--wails-draggable: no-drag;">
-                    <Button @click="drawerVisible = true" text> {{ version }} </Button>
+                    <Button @click="showMsg" text> {{ version }} </Button>
                 </div>
             </template>
         </Menu>
@@ -26,9 +26,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, nextTick } from 'vue';
+import { ref, onMounted, onUnmounted, nextTick, computed, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useLayout } from '../composables/useLayout';
+import { useToast } from 'primevue';
 
 interface MenuItem {
     label: string;
@@ -45,6 +46,7 @@ const isCollapsed = ref(false);
 const windowWidth = ref(window.innerWidth);
 const version = ref('');
 const drawerVisible = ref(false);
+const toast = useToast();
 
 const menuItems = ref<MenuItem[]>([
     {
@@ -75,13 +77,19 @@ const updateWindowWidth = (): void => {
     windowWidth.value = window.innerWidth;
     if (windowWidth.value < 768) {
         isCollapsed.value = true;
+    } else {
+        isCollapsed.value = false;
     }
+};
+
+const showMsg = (): void => {
+    toast.add({ severity: 'info', summary: '版本信息', detail: version.value, life: 1500 });
 };
 
 onMounted(() => {
     updateWindowWidth();
     window.addEventListener('resize', updateWindowWidth);
-    version.value = '1.0.0'
+    version.value = '1.0.0';
 });
 
 onUnmounted(() => {
@@ -161,6 +169,10 @@ onUnmounted(() => {
     width: 100%;
     box-sizing: border-box;
     font-size: 0.8rem;
+    height: 3rem;
+    /* 固定高度防止跳动 */
+    position: relative;
+    /* 为绝对定位的文字提供参考 */
 }
 
 .p-dark .menu-link {
@@ -188,6 +200,23 @@ onUnmounted(() => {
     color: var(--p-primary-300);
 }
 
+.menu-text {
+    position: absolute;
+    left: 2.5rem;
+    /* 图标位置 + 间距 */
+    white-space: nowrap;
+    overflow: hidden;
+    opacity: 1;
+    max-width: 200px;
+    transition: opacity 0.2s ease, max-width 0.3s ease;
+    pointer-events: none;
+}
+
+.menu-text-hidden {
+    opacity: 0;
+    max-width: 0;
+}
+
 .p-message {
     margin-top: .5rem;
 }
@@ -200,6 +229,11 @@ onUnmounted(() => {
 .sidebar-collapsed .menu-link {
     justify-content: center;
     padding: 0.75rem 0;
+}
+
+.sidebar-collapsed .menu-text {
+    display: block;
+    /* 保持显示但透明 */
 }
 
 /* 确保收起状态下菜单项宽度不超过侧边栏宽度 */

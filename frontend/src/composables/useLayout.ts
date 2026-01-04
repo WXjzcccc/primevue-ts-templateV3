@@ -487,38 +487,55 @@ export function useLayout(): UseLayoutReturn {
 		document.documentElement.classList.toggle("p-dark");
 	}
 
+	// 使用标志防止递归更新
+	const isUpdatingTheme = ref(false);
+
 	function updateThemeWithFallback(
 		type: 'primary' | 'surface',
 		palette: Record<string, string>,
 		updateFunction: (palette: Record<string, string>) => void
 	): void {
-		const root = document.documentElement;
-		const cssVarName = type === 'primary' ? '--p-primary-color' : '--p-surface-0';
+		if (isUpdatingTheme.value) return;
 
-		// 获取更新前的CSS变量值
-		const beforeValue = getComputedStyle(root).getPropertyValue(cssVarName).trim();
+		isUpdatingTheme.value = true;
 
-		// 尝试使用PrimeVue的方法
-		updateFunction(palette);
+		try {
+			const root = document.documentElement;
+			const cssVarName = type === 'primary' ? '--p-primary-color' : '--p-surface-0';
 
-		// 检查更新后的CSS变量值
-		const afterValue = getComputedStyle(root).getPropertyValue(cssVarName).trim();
+			// 获取更新前的CSS变量值
+			const beforeValue = getComputedStyle(root).getPropertyValue(cssVarName).trim();
 
-		// 如果值没有变化，使用手动更新
-		if (beforeValue === afterValue || afterValue === '') {
-			const prefix = type === 'primary' ? '--p-primary-' : '--p-surface-';
-			Object.entries(palette).forEach(([key, value]) => {
-				root.style.setProperty(`${prefix}${key}`, value);
-			});
+			// 尝试使用PrimeVue的方法
+			updateFunction(palette);
 
-			// 为primary颜色设置额外的--p-primary-color变量
-			if (type === 'primary') {
-				root.style.setProperty('--p-primary-color', palette['500']);
+			// 检查更新后的CSS变量值
+			const afterValue = getComputedStyle(root).getPropertyValue(cssVarName).trim();
+
+			// 如果值没有变化，使用手动更新
+			if (beforeValue === afterValue || afterValue === '') {
+				const prefix = type === 'primary' ? '--p-primary-' : '--p-surface-';
+				Object.entries(palette).forEach(([key, value]) => {
+					root.style.setProperty(`${prefix}${key}`, value);
+				});
+
+				// 为primary颜色设置额外的--p-primary-color变量
+				if (type === 'primary') {
+					root.style.setProperty('--p-primary-color', palette['500']);
+				}
 			}
+		} finally {
+			// 使用 nextTick 确保在下一个事件循环中重置标志
+			setTimeout(() => {
+				isUpdatingTheme.value = false;
+			}, 0);
 		}
 	}
 
 	function updateColors(type: string, colorName: string): void {
+		// 如果正在更新主题，跳过这次更新以避免递归
+		if (isUpdatingTheme.value) return;
+
 		if (type === "primary") {
 			setPrimary(colorName);
 			const color = primaryColors.value.find((c) => c.name === colorName);
@@ -538,18 +555,21 @@ export function useLayout(): UseLayoutReturn {
 	const primary = computed(() => appState.value.primary);
 	const surface = computed(() => appState.value.surface);
 
-	// 监听主题变化并重新应用
-	watchEffect(() => {
-		const primaryColor = primaryColors.value.find((c) => c.name === appState.value.primary);
-		if (primaryColor) {
-			updateThemeWithFallback('primary', primaryColor.palette, updatePrimaryPalette);
-		}
+	// // 监听主题变化并重新应用
+	// watchEffect(() => {
+	// 	// 如果正在更新主题，跳过这次更新以避免递归
+	// 	if (isUpdatingTheme.value) return;
 
-		const surfaceColor = surfaces.value.find((s) => s.name === appState.value.surface);
-		if (surfaceColor) {
-			updateThemeWithFallback('surface', surfaceColor.palette, updateSurfacePalette);
-		}
-	});
+	// 	const primaryColor = primaryColors.value.find((c) => c.name === appState.value.primary);
+	// 	if (primaryColor) {
+	// 		updateThemeWithFallback('primary', primaryColor.palette, updatePrimaryPalette);
+	// 	}
+
+	// 	const surfaceColor = surfaces.value.find((s) => s.name === appState.value.surface);
+	// 	if (surfaceColor) {
+	// 		updateThemeWithFallback('surface', surfaceColor.palette, updateSurfacePalette);
+	// 	}
+	// });
 
 	const initTheme = (): void => {
 		if (appState.value.darkMode) {
