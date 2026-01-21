@@ -71,6 +71,10 @@ func main() {
 		Frameless:        true,
 		BackgroundColour: application.NewRGB(27, 38, 54),
 		URL:              "/",
+		// 隐藏任务栏上的图标，但后续没有办法切换，可用于设置类或悬浮类窗口
+		// Windows: application.WindowsWindow{
+		// 	HiddenOnTaskbar: true,
+		// },
 	})
 
 	trayMenu := app.Menu.New()

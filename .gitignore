@@ -1,6 +1,7 @@
 .task
 .vscode
 .trae
+.shared
 bin
 frontend/dist
 frontend/node_modules

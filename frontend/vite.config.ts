@@ -8,14 +8,14 @@ import { fileURLToPath, URL } from 'node:url';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue(), wails("./bindings"),
-    Components(
-      {
-        resolvers: [PrimeVueResolver()],
-      }),
+  Components(
+    {
+      resolvers: [PrimeVueResolver()],
+    }),
   ],
   resolve: {
-        alias: {
-            '@': fileURLToPath(new URL('./src', import.meta.url))
-        }
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  }
 });
