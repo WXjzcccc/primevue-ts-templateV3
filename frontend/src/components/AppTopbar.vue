@@ -6,7 +6,6 @@ import { Window } from '@wailsio/runtime';
 
 const { isDarkMode, toggleDarkMode } = useLayout();
 const isMaximized = ref(false);
-const isWailsEnvironment = ref(false);
 
 const minimizeWindow = () => {
     Window.Minimise();
@@ -23,10 +22,42 @@ const toggleMaximizeWindow = () => {
 const closeWindow = () => {
     Window.Close();
 };
+
+// 自定义标题栏拖动，用于桌面层窗口拖动
+// 正常拖动只需要给标签添加style="--wails-draggable: drag;"
+let isDragging = false;
+let deltaX = 0;
+let deltaY = 0;
+
+const handleMouseDown = (e) => {
+    Window.Position().then((position) => {
+        deltaX = e.screenX - position.x;
+        deltaY = e.screenY - position.y;
+        isDragging = true;
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mouseup', handleMouseUp);
+    });
+}
+
+const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    const positionX = e.screenX - deltaX;
+    const positionY = e.screenY - deltaY;
+    console.log(positionX, positionY);
+    Window.SetPosition(positionX, positionY);
+}
+
+const handleMouseUp = (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    window.removeEventListener('mousemove', handleMouseMove);
+    window.removeEventListener('mouseup', handleMouseUp);
+}
+
 </script>
 
 <template>
-    <div class="topbar" style="--wails-draggable: drag;">
+    <div class="topbar" @mousedown="handleMouseDown">
         <div class="topbar-container">
             <div class="topbar-brand">
                 <img src="/wails.png" alt="Wails" class="topbar-logo" style="--wails-draggable: no-drag;"

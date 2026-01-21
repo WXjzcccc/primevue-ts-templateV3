@@ -77,6 +77,9 @@ func main() {
 		// },
 	})
 
+	// 将窗口附加到桌面层
+	// desktopWindowTool := NewDesktopWindowTool(window)
+	// desktopWindowTool.AttachToDesktop()
 	trayMenu := app.Menu.New()
 	trayMenu.Add("打开").OnClick(func(ctx *application.Context) {
 		if window.IsMinimised() {
